@@ -2,8 +2,8 @@ const { writeFile, copyFile } = require('./utils/generate-site.js');
 const inquirer = require('inquirer');
 const generatePage = require('./src/page-template.js');
 // this allows me to test the code using the dummy object data
-const mockData = require('./dummy.js');
-const testMode = process.argv[2];
+// const mockData = require('./dummy.js');
+// const testMode = process.argv[2];
 
 
 // const profileDataArgs = process.argv.slice(2, process.argv.length);
@@ -131,9 +131,9 @@ const promptProject = portfolioData => {
   });
 };
 // This will allow me to test the code by typing in -t in the command line following node app.js -t
-if (testMode === "-t") {
-  generatePage(mockData);
-} else {
+// if (testMode === "-t") {
+//   generatePage(mockData);
+// } else {
 
   promptUser()
   .then(promptProject)
@@ -153,7 +153,7 @@ if (testMode === "-t") {
   .catch(err => {
     console.log(err);
   });
-};
+// };
 
 
 
