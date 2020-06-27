@@ -1,14 +1,18 @@
+const fs = require('fs');
 const inquirer = require('inquirer');
-const profileDataArgs = process.argv.slice(2, process.argv.length);
+const generatePage = require('./src/page-template.js');
+const mockData = require('./dummy.js');
 
-const [name, github] = profileDataArgs;
+
+// const profileDataArgs = process.argv.slice(2, process.argv.length);
+// const [name, github] = profileDataArgs;
 
 const promptUser = () => {
   return inquirer.prompt ([
     {
       type: 'input',
       name: 'name',
-      message: 'What is your name?',
+      message: 'What is your name? (Required)',
       validate: nameInput => {
         if (nameInput) {
           return true;
@@ -21,7 +25,7 @@ const promptUser = () => {
     {
       type: 'input',
       name: 'github',
-      message: 'Enter your GitHub Username',
+      message: 'Enter your GitHub Username (Required)',
       validate: githubInput => {
         if (githubInput) {
           return true;
@@ -60,12 +64,12 @@ const promptProject = portfolioData => {
     {
       type: 'input',
       name: 'name',
-      message: 'What is the name of your project?',
+      message: 'What is the name of your project? (Required)',
       validate: nameInput => {
         if (nameInput) {
           return true;
         } else {
-          console.log('Please enter your projects name!');
+          console.log('Please enter your project name!');
           return false;
         }
       }
@@ -73,7 +77,7 @@ const promptProject = portfolioData => {
     {
       type: 'input',
       name: 'description',
-      message: 'Provide a description of your project',
+      message: 'Provide a description of your project (Required)',
       validate: descriptionInput => {
         if (descriptionInput) {
           return true;
@@ -92,7 +96,7 @@ const promptProject = portfolioData => {
     {
       type: 'input',
       name: 'link',
-      message: 'Enter the GitHub link to your project.',
+      message: 'Enter the GitHub link to your project. (Required)',
       validate: linkInput => {
         if (linkInput) {
           return true;
@@ -124,12 +128,20 @@ const promptProject = portfolioData => {
     }
   });
 };
-
+// add this section back once the HTML is set up
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData);
-  });
+//     const pageHTML = generatePage(portfolioData);
+const pageHTML = generatePage(mockData);
+
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
+});
+  
 
 
 
@@ -137,7 +149,7 @@ promptUser()
 
 // prior code for reference purposes. 
   // const fs = require('fs');
-  // const generatePage = require('./src/page-template.js');
+  
 
 
   // const name = profileDataArgs[0];
