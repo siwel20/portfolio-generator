@@ -1,7 +1,9 @@
-const fs = require('fs');
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 const inquirer = require('inquirer');
 const generatePage = require('./src/page-template.js');
+// this allows me to test the code using the dummy object data
 const mockData = require('./dummy.js');
+const testMode = process.argv[2];
 
 
 // const profileDataArgs = process.argv.slice(2, process.argv.length);
@@ -128,22 +130,30 @@ const promptProject = portfolioData => {
     }
   });
 };
-// add this section back once the HTML is set up
-promptUser()
+// This will allow me to test the code by typing in -t in the command line following node app.js -t
+if (testMode === "-t") {
+  generatePage(mockData);
+} else {
+
+  promptUser()
   .then(promptProject)
   .then(portfolioData => {
-//     const pageHTML = generatePage(portfolioData);
-const pageHTML = generatePage(mockData);
-
-    fs.writeFile('./index.html', pageHTML, err => {
-      if (err) throw new Error(err);
-
-      console.log('Page created! Check out index.html in this directory to see it!');
-    });
-});
-  
-
-
+    return generatePage(portfolioData);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
+  .then(writeFileResponse => {
+    console.log(writeFileResponse);
+    return copyFile();
+  })
+  .then(copyFileResponse => {
+    console.log(copyFileResponse);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+};
 
 
 
@@ -171,4 +181,4 @@ const pageHTML = generatePage(mockData);
     //   if (err) throw err;
     
     //   console.log('Portfolio complete! Check out index.html to see the output!');
-    // });
+ 
